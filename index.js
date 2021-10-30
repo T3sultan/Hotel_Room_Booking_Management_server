@@ -21,79 +21,107 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 
 
-client.connect((err) => {
-    const serviceCollection = client.db("hotel").collection("services");
-    const volunteerCollection = client
-        .db("hotelRoom")
-        .collection("servicesMan");
+// client.connect((err) => {
+//     const serviceCollection = client.db("hotel").collection("services");
 
-    //GET API
-    app.get('/addNewService', async (req, res) => {
-        const cursor = serviceCollection.find({});
-        const services = await cursor.toArray();
-        res.send(services)
-    })
-    // add Events
-    app.post("/addNewService", async (req, res) => {
-        console.log(req.body);
-        const result = await serviceCollection.insertOne(req.body);
-        console.log(result);
-        res.json(result)
-    });
+//     //GET API
+//     app.get('/services', async (req, res) => {
+//         const cursor = serviceCollection.find({});
+//         const services = await cursor.toArray();
+//         res.send(services)
+//     })
+//     //POST 
+//     app.post("/services", async (req, res) => {
+//         console.log(req.body);
+//         const result = await serviceCollection.insertOne(req.body);
+//         console.log(result);
+//         res.json(result)
+//     });
 
-    // get search events
-    // app.get("/searchEvent", async (req, res) => {
-    //   const result = await EventsCollection.find({
-    //     title: { $regex: req.query.search },
-    //   }).toArray();
-    //   res.send(result);
-    //   console.log(result);
-    // });
+//      //GET SINGLE SERVICE
+//      app.get('/services/:id', async (req, res) => {
+//         const id = req.params.id;
+//         console.log('getting service')
+//         const query = { _id: ObjectId(id) };
+//         const service = await servicesCollection.findOne(query);
+//         res.json(service);
 
-    // add volunteer
-    // app.post("/addVolunteer", async (req, res) => {
-    //   console.log(req.body);
-    //   const result = await volunteerCollection.insertOne(req.body);
-    //   res.send(result);
-    // });
+//     })
 
-    // get all volunteer
+//     //DELETE API
+//     app.delete('/services/:id', async (req, res) => {
+//         const id = req.params.id;
+//         console.log('deleted id')
+//         const query = { _id: ObjectId(id) };
+//         const result = await servicesCollection.deleteOne(query);
+//         res.json(result);
+//     })
+    
 
-    // app.get("/allVolunteer", async (req, res) => {
-    //   const result = await volunteerCollection.find({}).toArray();
-    //   res.send(result);
-    //   console.log(result);
-    // });
-    // get all events
 
-    // app.get("/allEvents", async (req, res) => {
-    //   const result = await EventsCollection.find({}).toArray();
-    //   res.send(result);
-    // });
+//     // my events
 
-    // delete event
+//     // app.get("/myEvents/:email", async (req, res) => {
+//     //   const result = await EventsCollection.find({
+//     //     email: req.params.email,
+//     //   }).toArray();
+//     //   res.send(result);
+//     // });
 
-    // app.delete("/deleteEvent/:id", async (req, res) => {
-    //   console.log(req.params.id);
-    //   const result = await EventsCollection.deleteOne({
-    //     _id: ObjectId(req.params.id),
-    //   });
-    //   res.send(result);
-    // });
+//     // add addVolunteer
 
-    // my events
+//     // get all volunteer
+// });
 
-    // app.get("/myEvents/:email", async (req, res) => {
-    //   const result = await EventsCollection.find({
-    //     email: req.params.email,
-    //   }).toArray();
-    //   res.send(result);
-    // });
+async function run() {
+    try {
+        await client.connect();
+        //console.log('connected to database');
+        const database = client.db('hotel');
+        const servicesCollection = database.collection('services');
+        //GET API
+        app.get('/services', async (req, res) => {
+            const cursor = servicesCollection.find({});
+            const services = await cursor.toArray();
+            res.send(services)
+        })
+        //GET SINGLE SERVICE
+        app.get('/services/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log('getting service')
+            const query = { _id: ObjectId(id) };
+            const service = await servicesCollection.findOne(query);
+            res.json(service);
 
-    // add addVolunteer
+        })
+        //POST API
+        app.post('/services', async (req, res) => {
+            const service = req.body;
+            console.log('Hit the post api', service);
+            const result = await servicesCollection.insertOne(service)
 
-    // get all volunteer
-});
+            console.log(result)
+            res.json(result)
+        });
+        //DELETE API
+        app.delete('/services/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log('deleted id')
+            const query = { _id: ObjectId(id) };
+            const result = await servicesCollection.deleteOne(query);
+            res.json(result);
+        })
+
+    }
+    finally {
+        // await client.close();
+    }
+
+
+}
+run().catch(console.dir);
+
+
 
 
 
