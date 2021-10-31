@@ -111,14 +111,14 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('Running Genius Server');
+    res.send('Running Hotel Server');
 });
 app.get('/hello', (req, res) => {
     res.send('Hello updated here')
 })
 
 app.listen(port, () => {
-    console.log("Running Genius Server on port", port)
+    console.log("Running Hotel Server on port", port)
 });
 
 
