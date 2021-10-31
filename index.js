@@ -111,6 +111,37 @@ async function run() {
             const result = await servicesCollection.deleteOne(query);
             res.json(result);
         })
+         //UPDATE API
+         app.put('/services/:id', async (req, res) => {
+            const id = req.params.id;
+            //console.log(id)
+            const updateOrder = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    name: updateOrder.name,
+                    email: updateOrder.email,
+                    title:updateOrder.title,
+                    price:updateOrder.price,
+                    description:updateOrder.description,
+                    address:updateOrder.address,
+                    city:updateOrder.city,
+                    date:updateOrder.date,
+                    image:updateOrder.image
+                },
+            };
+            const result = await servicesCollection.updateOne(filter, updateDoc, options)
+
+
+
+           // console.log("updating user", req);
+           // res.send('updating not dating');
+            res.json(result)
+
+
+
+        })
 
     }
     finally {
