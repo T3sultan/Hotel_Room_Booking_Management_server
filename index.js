@@ -56,7 +56,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 //         const result = await servicesCollection.deleteOne(query);
 //         res.json(result);
 //     })
-    
+
 
 
 //     // my events
@@ -111,8 +111,8 @@ async function run() {
             const result = await servicesCollection.deleteOne(query);
             res.json(result);
         })
-         //UPDATE API
-         app.put('/services/:id', async (req, res) => {
+        //UPDATE API
+        app.put('/services/:id', async (req, res) => {
             const id = req.params.id;
             //console.log(id)
             const updateOrder = req.body;
@@ -122,26 +122,33 @@ async function run() {
                 $set: {
                     name: updateOrder.name,
                     email: updateOrder.email,
-                    title:updateOrder.title,
-                    price:updateOrder.price,
-                    description:updateOrder.description,
-                    address:updateOrder.address,
-                    city:updateOrder.city,
-                    date:updateOrder.date,
-                    image:updateOrder.image
+                    title: updateOrder.title,
+                    price: updateOrder.price,
+                    description: updateOrder.description,
+                    address: updateOrder.address,
+                    city: updateOrder.city,
+                    date: updateOrder.date,
+                    image: updateOrder.image
                 },
             };
             const result = await servicesCollection.updateOne(filter, updateDoc, options)
 
 
 
-           // console.log("updating user", req);
-           // res.send('updating not dating');
+            // console.log("updating user", req);
+            // res.send('updating not dating');
             res.json(result)
-
-
-
         })
+
+        // my orders
+
+        app.get("/myOrders/:email", async (req, res) => {
+            const result = await servicesCollection.find({
+                email: req.params.email,
+            }).toArray();
+            res.send(result);
+        });
+
 
     }
     finally {
